@@ -2,7 +2,6 @@
 # Heinz-Otto Klas 2019
 # send commands to FHEM over HTTP
 # if no Argument, show usage
-
 if [ $# -eq 0 ]
 then
      echo 'fhemcl Usage'
@@ -14,14 +13,14 @@ fi
 
 # split the first Argument
 IFS=:
-arr=($1)
+arr=("$1")
 
 # if only one then use as portNumber
 # or use it as url
 IFS=
 if [ ${#arr[@]} -eq 1 ]
 then
-    if [[ `echo "$1" | grep -E ^[[:digit:]]+$` ]]
+    if  echo "$1" | grep -q -E '^[[:digit:]]+$' 
     then
         hosturl=http://localhost:$1
     else
@@ -44,11 +43,12 @@ if [ -p /dev/stdin ]; then
         while IFS= read -r line; do
               cmdarray+=("${line}")
         done
+
 else
         # Checking the 2 parameter: filename exist or simple commands
         if [ -f "$2" ]; then
             echo "Reading File: ${2}"
-            readarray -t cmdarray < ${2}
+            readarray -t cmdarray < "${2}"
         else
         echo "Reading further parameters"
         for ((a=2; a<=${#}; a++)); do
@@ -62,11 +62,13 @@ fi
 for ((i=0; i<${#cmdarray[*]}; i++));do 
     # concat def lines with ending \ to the next line, remove any \r from line
     cmd=${cmdarray[i]//[$'\r']} 
-    while [ ${cmd:${#cmd}-1:1} = '\' ];do 
+
+    while [ "${cmd:${#cmd}-1:1}" = '\' ];do 
           ((i++))
           cmd=${cmd::-1}$'\n'${cmdarray[i]//[$'\r']}
     done
-    echo "proceeding Line $(($i+1)) : "${cmd}
+
+    echo "proceeding Line $((i+1)) : ${cmd}"
     # urlencode loop over String
     cmdu=''
     for ((pos=0;pos<${#cmd};pos++)); do
@@ -77,5 +79,5 @@ for ((i=0; i<${#cmdarray[*]}; i++));do
     cmd=$cmdu
     # send command to FHEM and filter the output (tested with list...).
     # give only lines between, including the two Tags back, then remove all HTML Tags 
-    curl -s --data "fwcsrf=$token" $hosturl/fhem?cmd=$cmd | sed -n '/<pre>/,/<\/pre>/p' |sed 's/<[^>]*>//g'
+    curl -s --data "fwcsrf=$token" "$hosturl/fhem?cmd=$cmd" | sed -n '/<pre>/,/<\/pre>/p' |sed 's/<[^>]*>//g'
 done
