@@ -76,6 +76,6 @@ for ((i=0; i<${#cmdarray[*]}; i++));do
     done
     cmd=$cmdu
     # send command to FHEM and filter the output (tested with list...).
-    # give only lines between, including the two Tags back, then remove all HTML Tags 
+    # give only lines between <pre></pre> back, then remove all HTML Tags 
     curl -s --data "fwcsrf=$token" $hosturl/fhem?cmd=$cmd | sed -n '/<pre>/,/<\/pre>/p' |sed 's/<[^>]*>//g'
 done
