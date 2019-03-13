@@ -32,9 +32,15 @@ else
     hosturl=$1
 fi
 
-# get Token via http Head request
-token=$(curl -Is "$hosturl/fhem?XHR=1" | awk '/X-FHEM-csrfToken/{print $2}')
-if [ -z "${token}" ]; then 
+# get Token and Status
+token=;PROTO=;STATUS=;MSG=
+while IFS=':' read key value; do
+    case "$key" in
+        X-FHEM-csrfToken) token="$value"      ;;
+        HTTP*) read PROTO STATUS MSG <<< $key ;;
+     esac
+done < <(curl -s -D - "$hosturl/fhem?XHR=1")
+if [ -z "${STATUS}" ]; then 
 	exit 1
 fi
 
