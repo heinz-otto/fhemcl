@@ -39,9 +39,10 @@ while IFS=':' read key value; do
         HTTP*) status="$key"                           ;;
      esac
 done < <(curl -s -D - "$hosturl/fhem?XHR=1")
-# this should be extend
+# this should be extended
 # now only zero message detected
 if [ -z "${status}" ]; then 
+        echo "no response from $hosturl"
 	exit 1
 fi
 
