@@ -31,8 +31,17 @@ else
     hosturl=$1
 fi
 
-# get Token 
-token=$(curl -s -D - "$hosturl/fhem?XHR=1" | awk '/X-FHEM-csrfToken/{print $2}')
+# get Token and Status
+token=;PROTO=;STATUS=;MSG=
+while IFS=':' read key value; do
+    case "$key" in
+        X-FHEM-csrfToken) token="$value"      ;;
+        HTTP*) read PROTO STATUS MSG <<< $key ;;
+     esac
+done < <(curl -s -D - "$hosturl/fhem?XHR=1")
+if [ -z "${STATUS}" ]; then 
+	exit 1
+fi
 
 # reading FHEM command, from Pipe, File or Arguments 
 # Check to see if a pipe exists on stdin.
