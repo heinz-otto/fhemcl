@@ -32,14 +32,16 @@ else
 fi
 
 # get Token and Status
-token=;PROTO=;STATUS=;MSG=
+token=;status=
 while IFS=':' read key value; do
     case "$key" in
-        X-FHEM-csrfToken) token="$value"      ;;
-        HTTP*) read PROTO STATUS MSG <<< $key ;;
+        X-FHEM-csrfToken) token=${value//[[:blank:]]/} ;;
+        HTTP*) status="$key"                           ;;
      esac
 done < <(curl -s -D - "$hosturl/fhem?XHR=1")
-if [ -z "${STATUS}" ]; then 
+# this should be extend
+# now only zero message detected
+if [ -z "${status}" ]; then 
 	exit 1
 fi
 
