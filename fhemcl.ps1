@@ -60,7 +60,7 @@ for ($i=0; $i -lt $cmdarray.Length; $i++) {
    # concat def lines with ending \ to the next line
    $cmd = $cmdarray[$i]
    while($cmd.EndsWith('\')) {$cmd=$cmd.Remove($cmd.Length - 1,1) + "`n" + $cmdarray[$i+1];$i++}
-   write-output "proceeding line $($i+1) : $cmd"
+   write-verbose "proceeding line $($i+1) : $cmd"
    # url encode
    $cmd=[System.Uri]::EscapeDataString($cmd)
    $web = Invoke-WebRequest -Uri "$hosturl/fhem?cmd=$cmd&fwcsrf=$token" -Headers $headers
