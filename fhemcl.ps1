@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     This Script is a FHEM Client for HTTP
 .DESCRIPTION
@@ -63,6 +63,10 @@ for ($i=0; $i -lt $cmdarray.Length; $i++) {
    write-verbose "proceeding line $($i+1) : $cmd"
    # url encode
    $cmd=[System.Uri]::EscapeDataString($cmd)
+   try{
    $web = Invoke-WebRequest -Uri "$hosturl/fhem?cmd=$cmd&fwcsrf=$token" -Headers $headers
    if ($web.content.IndexOf("<pre>") -ne -1) {$web.content.Substring($web.content.IndexOf("<pre>"),$web.content.IndexOf("</pre>")-$web.content.IndexOf("<pre>")) -replace '<[^>]+>',''}
+   }
+   catch{ 
+   } 
 }
