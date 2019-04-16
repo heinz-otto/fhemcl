@@ -50,24 +50,22 @@ fi
 # Check to see if a pipe exists on stdin.
 cmdarray=()
 if [ -p /dev/stdin ]; then
-        echo "Data was piped to this script!"
-        # If we want to read the input line by line
+        # we read the input line by line
         while IFS= read -r line; do
               cmdarray+=("${line}")
         done
-
 else
-        # Checking the 2 parameter: filename exist or simple commands
-        if [ -f "$2" ]; then
-            echo "Reading File: ${2}"
-            readarray -t cmdarray < "${2}"
-        else
-        echo "Reading further parameters"
+    # Checking the 2 parameter: filename exist or simple commands
+    if [ -f "$2" ]; then
+        echo "Reading File: ${2}"
+        readarray -t cmdarray < "${2}"
+    else
+    # Reading further parameters
         for ((a=2; a<=${#}; a++)); do
             echo "command specified: ${!a}"
             cmdarray+=("${!a}")
         done
-        fi
+    fi
 fi
 
 # loop over all lines stepping up. For stepping down (i=${#cmdarray[*]}; i>0; i--)
@@ -80,7 +78,7 @@ for ((i=0; i<${#cmdarray[*]}; i++));do
           cmd=${cmd::-1}$'\n'${cmdarray[i]//[$'\r']}
     done
 
-    echo "proceeding Line $((i+1)) : ${cmd}"
+    # echo "proceeding Line $((i+1)) : ${cmd}"
     # urlencode loop over String
     cmdu=''
     for ((pos=0;pos<${#cmd};pos++)); do
