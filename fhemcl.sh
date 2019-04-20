@@ -57,12 +57,12 @@ if [ -p /dev/stdin ]; then
 else
     # Checking the 2 parameter: filename exist or simple commands
     if [ -f "$2" ]; then
-        echo "Reading File: ${2}"
+        # echo "Reading File: ${2}"
         readarray -t cmdarray < "${2}"
     else
     # Reading further parameters
         for ((a=2; a<=${#}; a++)); do
-            echo "command specified: ${!a}"
+            # echo "command specified: ${!a}"
             cmdarray+=("${!a}")
         done
     fi
