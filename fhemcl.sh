@@ -13,7 +13,7 @@ fi
 
 # split the first Argument
 IFS=:
-arr=("$1")
+arr=($1)
 
 # if only one then use as portNumber
 # or use it as url
