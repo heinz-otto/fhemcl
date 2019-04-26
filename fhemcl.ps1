@@ -4,9 +4,9 @@
 .DESCRIPTION
     FHEM commands could given over the Pipe, Arguments or File.
 .EXAMPLE
-    fhemcl [http://<hostName>:]<portNummer> "FHEM command1" "FHEM command2"
-    fhemcl [http://<hostName>:]<portNummer> filename
-    echo "FHEM command"|fhemcl [http://<hostName>:]<portNummer>
+    fhemcl [http://[<user:password>@]<hostName>:]<portNummer> "FHEM command1" "FHEM command2"
+    fhemcl [http://[<user:password>@]<hostName>:]<portNummer> filename
+    echo "FHEM command"|fhemcl [http://[<user:password>@]<hostName>:]<portNummer>
 .NOTES
     put every FHEM command line in ""
 #>
@@ -63,10 +63,20 @@ for ($i=0; $i -lt $cmdarray.Length; $i++) {
    write-verbose "proceeding line $($i+1) : $cmd"
    # url encode
    $cmd=[System.Uri]::EscapeDataString($cmd)
-   try{
    $web = Invoke-WebRequest -Uri "$hosturl/fhem?cmd=$cmd&fwcsrf=$token" -Headers $headers
-   if ($web.content.IndexOf("<pre>") -ne -1) {$web.content.Substring($web.content.IndexOf("<pre>"),$web.content.IndexOf("</pre>")-$web.content.IndexOf("<pre>")) -replace '<[^>]+>',''}
+   write-verbose "------------------ complete Weboutput ------------------"
+   write-verbose $web
+   $webStart="<div id='content' >"
+   $webEnd="</div>"
+   if ($web.content.IndexOf($webStart) -ne -1) {
+        # Substring(start,end(after start) - start(->length))  
+     $webOutput = $web.content.Substring(
+              $web.Content.IndexOf($webStart),
+              $web.Content.IndexOf($webEnd,$web.Content.IndexOf($webStart))-$web.Content.IndexOf($webStart)
+        )
+        write-verbose "------------------ interesting Weboutput ------------------"
+        write-verbose $webOutput
+        # remove start & end line from the block, remove the /pre Tag line and then remove all other HTML Tags 
+        $webOutput.Replace($webStart + "`n","").Replace("</pre>`n","") -replace '<[^>]+>',''
    }
-   catch{ 
-   } 
 }
