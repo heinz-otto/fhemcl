@@ -89,5 +89,5 @@ for ((i=0; i<${#cmdarray[*]}; i++));do
     cmd=$cmdu
     # send command to FHEM and filter the output (tested with list...).
     # give only lines between <pre></pre> back, then remove all HTML Tags 
-    curl -s --data "fwcsrf=$token" "$hosturl/fhem?cmd=$cmd" | sed -n '/<pre>/,/<\/pre>/p' |sed 's/<[^>]*>//g'
+    curl -s --data "fwcsrf=$token" "$hosturl/fhem?cmd=$cmd" | sed -n '/<div.*content/,/<\/div>/p'|sed -e '/div/d' -e '/\/pre>/d' -e 's/<[^>]*>//g'
 done
