@@ -10,6 +10,6 @@ Basic Feature:
 * basic parsing of the HTML Output and returns only Text
 
 Usage:
-* fhemcl [http://hostname:]portnumber "FHEM command1" "FHEM command2"
-* fhemcl [http://user:password@hostname:]portnumber filename
-* echo -e "set Aktor01 toggle" | fhemcl [http://hostname:]portnumber
+* fhemcl [http://[user:password@]hostname:]portnumber "FHEM command1" "FHEM command2"
+* fhemcl [http://[user:password@]hostname:]portnumber filename
+* echo -e "set Aktor01 toggle" | fhemcl [http://[user:password@]hostname:]portnumber
