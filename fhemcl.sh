@@ -5,9 +5,9 @@
 if [ $# -eq 0 ]
 then
      echo ${0##*/}' Usage' 
-     echo ${0##*/}' [http://[<user:password@>]<hostName>:]<portNummer> "FHEM command1" "FHEM command2"'
-     echo ${0##*/}' [http://[<user:password@>]<hostName>:]<portNummer> filename'
-     echo 'echo -e "set Aktor01 toggle" | '${0##*/}' [http://[<user:password@>]<hostName>:]<portNumber>'
+     echo ${0##*/}' [http://[<user:password@>][<hostName>:]]<portNummer> "FHEM command1" "FHEM command2"'
+     echo ${0##*/}' [http://[<user:password@>][<hostName>:]]<portNummer> filename'
+     echo 'echo -e "set Aktor01 toggle" | '${0##*/}' [http://[<user:password@>][<hostName>:]]<portNumber>'
      exit 1
 fi
 
