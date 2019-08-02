@@ -1,35 +1,49 @@
 #!/bin/bash
 # Heinz-Otto Klas 2019
 # send commands to FHEM over HTTP
-# if no Argument, show usage
-if [ $# -eq 0 ]
-then
+# if no Arguments use default http://localhost:8083
+port=8083
+host=localhost
+prot=http
+# Functions
+function usage {
      echo ${0##*/}' Usage' 
      echo ${0##*/}' [http://[<user:password@>][<hostName>:]]<portNummer> "FHEM command1" "FHEM command2"'
      echo ${0##*/}' [http://[<user:password@>][<hostName>:]]<portNummer> filename'
-     echo 'echo -e "set Aktor01 toggle" | '${0##*/}' [http://[<user:password@>][<hostName>:]]<portNumber>'
+     echo 'echo -e "set Aktor01 toggle" | '${0##*/}' [http://][<user:password@>][[<hostName>]:[<portNumber>]]'
      exit 1
+}
+#End Functions
+# Test option and show Helpmessage and exit
+if [[ $1 == -h ]]    
+ then
+    usage
 fi
-
-# split the first Argument
-IFS=:
-arr=($1)
-
-# if only one then use as portNumber
-# or use it as url
-IFS=
-if [ ${#arr[@]} -eq 1 ]
+# Test the first argument and build the hosturl
+if [ $# -eq 0 ]
 then
-    if  echo "$1" | grep -q -E '^[[:digit:]]+$' 
+    arr=(http //$host $port) # If no Argument use default
+else
+    IFS=:                    # split the first Argument
+    arr=($1)
+    IFS=
+fi
+# Test if portnumber at last position
+if  echo "${arr[-1]}" | grep -q -E '^[[:digit:]]+$'
+then
+    if [ ${#arr[@]} -eq 1 ]  # If only portnumber?
     then
-        hosturl=http://localhost:$1
-    else
-        echo "$1 is not a Portnumber"
-        exit 1
+       arr=($host ${arr[0]}) # add default host to array
     fi
 else
-    hosturl=$1
+    arr[${#arr[@]}]=$port    # no portnumber add default port to array
 fi
+
+if [[ "${arr[1]}" != //* ]]  # exist already // 
+then
+   arr=($prot //${arr[*]})    # add default protocol :// to the final url
+fi
+hosturl=$(IFS=":";echo "${arr[*]}") # build the full url from the array together
 
 # get Token and Status
 token=;status=
@@ -67,7 +81,11 @@ else
         done
     fi
 fi
-
+# if cmdarray is empty show Helpmessage and exit
+if [ ${#cmdarray[*]} -eq 0 ]; then
+    echo "no command given, hosturl was $hosturl"
+    usage
+fi
 # loop over all lines stepping up. For stepping down (i=${#cmdarray[*]}; i>0; i--)
 for ((i=0; i<${#cmdarray[*]}; i++));do 
     # concat def lines with ending \ to the next line, remove any \r from line
