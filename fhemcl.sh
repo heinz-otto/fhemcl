@@ -7,10 +7,12 @@ host=localhost
 prot=http
 # Functions
 function usage {
-     echo ${0##*/}' Usage' 
-     echo ${0##*/}' [http://[<user:password@>][<hostName>:]]<portNummer> "FHEM command1" "FHEM command2"'
-     echo ${0##*/}' [http://[<user:password@>][<hostName>:]]<portNummer> filename'
-     echo 'echo -e "set Aktor01 toggle" | '${0##*/}' [http://][<user:password@>][[<hostName>]:[<portNumber>]]'
+	echo ${0##*/}' <hosturl> "FHEM command1" "FHEM command2"'
+	echo ${0##*/}' <hosturl> filename'
+	echo 'lines from pipe like echo -e "set Aktor01 toggle" | '${0##*/}' [<hosturl>]'
+	echo '<hosturl> default is $prot://$host:$port'
+	echo '<hosturl> Argument could be any part of http://user:password@hostName:portNumber'
+	echo '          except user:password@ any missing part is added from default'
      exit 1
 }
 #End Functions
