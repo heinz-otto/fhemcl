@@ -106,7 +106,9 @@ for ((i=0; i<${#cmdarray[*]}; i++));do
     done
     cmd=$cmdu
     # send command to FHEM and filter the output (tested with list...).
-    # give only lines between <pre></pre> back, then remove all HTML Tags 
+    # the HTML Output is filtered (command sed -n) to the div container "content", all lines between <div ... </div> (included)
+    # first sed -e stripped the line with div itself, second " -e" stripped the lines with pre
+    # third " -e" removes all remaining html Tags - and we get plain formatted Text
     # may be the argument -m 15 is usefull
     curl -s --data "fwcsrf=$token" "$hosturl/fhem?cmd=$cmd" | sed -n '/<div.*content/,/<\/div>/p' | sed -e '/div/d' -e '/\/pre>/d' -e 's/<[^>]*>//g'
 done
