@@ -10,23 +10,23 @@ function usage {
 	echo ${0##*/}' <hosturl> "FHEM command1" "FHEM command2"'
 	echo ${0##*/}' <hosturl> filename'
 	echo 'lines from pipe like echo -e "set Aktor01 toggle" | '${0##*/}' [<hosturl>]'
-	echo '<hosturl> default is $prot://$host:$port'
+	echo "<hosturl> default is $prot://$host:$port"
 	echo '<hosturl> Argument could be any part of http://user:password@hostName:portNumber'
 	echo '          except user:password@ any missing part is added from default'
      exit 1
 }
 #End Functions
 # Test option and show Helpmessage and exit
-if [[ $1 == -h ]]    
+if [[ $1 == -h ]]
  then
     usage
 fi
 # Test the first argument and build the hosturl
 if [ $# -eq 0 ]
 then
-    arr=(http //$host $port) # If no Argument use default
+    arr=($prot //$host $port) # If no Argument use default
 else
-    IFS=:                    # split the first Argument
+    IFS=:                     # split the first Argument
     arr=($1)
     IFS=
 fi
