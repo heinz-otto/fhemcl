@@ -21,6 +21,13 @@ if [[ $1 == -h ]]
  then
     usage
 fi
+# Test requirements
+prog="curl"
+if ! which $prog > /dev/null
+   then
+      echo "$prog is missing, try <PaketMgr> install $prog"
+      exit 2
+fi
 # Test the first argument and build the hosturl
 if [ $# -eq 0 ]
 then
