@@ -10,17 +10,19 @@ Basic Feature:
 * Answer from FHEMWEB returns only Text similar to fhem.pl client mode
 
 Usage:
-* fhemcl [http://[user:password@]hostname:]portnumber "FHEM command1" "FHEM command2"
-* fhemcl [http://[user:password@]hostname:]portnumber filename
-* echo -e "set Aktor01 toggle" | fhemcl [http://[user:password@]hostname:]portnumber
+```
+fhemcl [http://[user:password@]hostname:]portnumber "FHEM command1" "FHEM command2"
+fhemcl [http://[user:password@]hostname:]portnumber filename
+echo -e "set Aktor01 toggle" | fhemcl [http://[user:password@]hostname:]portnumber
+```
 
 ## Usage Scenarios
 For redirecting the stdout of another Program line per line for logging to FHEM
 ### Powershell: 
 ```
-| % {"set Sicherung " + $_ }|fhemcl.ps1 [http://[user:password@]hostname:]portnumber
+| % {"set Sicherung " + $_ } | fhemcl.ps1 [http://[user:password@]hostname:]portnumber
 ```
 ### Bash:
 ```
-| while IFS= read -r line; do echo "set Sicherung ${line}";done|bash fhemcl.sh [http://[user:password@]hostname:]portnumber
+| while IFS= read -r line; do echo "set Sicherung ${line}";done | bash fhemcl.sh [http://[user:password@]hostname:]portnumber
 ```
