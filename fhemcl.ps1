@@ -81,5 +81,5 @@ for ($i=0; $i -lt $cmdarray.Length; $i++) {
    #     write-verbose $webOutput
    #     # remove start & end line from the block, remove the /pre Tag line and then remove all other HTML Tags 
    #     $webOutput.Replace($webStart + "`n","").Replace("</pre>`n","") -replace '<[^>]+>',''
-   }
+   # }
 }
