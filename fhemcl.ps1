@@ -69,17 +69,4 @@ for ($i=0; $i -lt $cmdarray.Length; $i++) {
    write-verbose "--------------- Weboutput with Response - Content is shortened --"
    write-verbose $web
    $web.content
-   # $webStart="<div id='content' >"
-   # $webEnd="</div>"
-   # if ($web.content.IndexOf($webStart) -ne -1) {
-   #     # Substring(start,end(after start) - start(->length))  
-   #  $webOutput = $web.content.Substring(
-   #           $web.Content.IndexOf($webStart),
-   #           $web.Content.IndexOf($webEnd,$web.Content.IndexOf($webStart))-$web.Content.IndexOf($webStart)
-   #     )
-   #     write-verbose "------------------ interesting Weboutput ------------------"
-   #     write-verbose $webOutput
-   #     # remove start & end line from the block, remove the /pre Tag line and then remove all other HTML Tags 
-   #     $webOutput.Replace($webStart + "`n","").Replace("</pre>`n","") -replace '<[^>]+>',''
-   # }
 }
