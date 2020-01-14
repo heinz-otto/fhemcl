@@ -1,6 +1,6 @@
 #!/bin/bash
 # Heinz-Otto Klas 2019
-# simplified Version with wget instead of curl and with &XHR=1 for no HTML Response from Server 
+# simplified Version with wget instead of curl and with &XHR=1 for no HTML Response from Server
 # send commands to FHEM over HTTP
 # if no Arguments use default http://localhost:8083
 port=8083
@@ -50,7 +50,7 @@ else
     arr[${#arr[@]}]=$port    # no portnumber add default port to array
 fi
 
-if [[ "${arr[1]}" != //* ]]  # exist already // 
+if [[ "${arr[1]}" != //* ]]  # exist already //
 then
    arr=($prot //${arr[*]})    # add default protocol :// to the final url
 fi
@@ -60,19 +60,19 @@ hosturl=$(IFS=":";echo "${arr[*]}") # build the full url from the array together
 token=;status=
 while IFS=':' read key value; do
     case "$key" in
-        *X-FHEM-csrfToken) token=${value//[$'\r']/} ;;
-        *HTTP*200*)        status="$key"            ;;
+        *X-FHEM-csrfToken) token=${value//[ ,$'\r']/} ;;
+        *HTTP*200*)        status="$key"              ;;
      esac
 #done < <(curl -s -D - "$hosturl/fhem?XHR=1")
 done < <(wget -qO - --server-response "$hosturl/fhem?XHR=1" 2>&1)
 # this should be extended
 # now only zero message detected
-if [ -z "${status}" ]; then 
+if [ -z "${status}" ]; then
         echo "no response from $hosturl"
 	exit 1
 fi
 
-# reading FHEM command, from Pipe, File or Arguments 
+# reading FHEM command, from Pipe, File or Arguments
 # Check to see if a pipe exists on stdin.
 cmdarray=()
 if [ -p /dev/stdin ]; then
@@ -99,11 +99,11 @@ if [ ${#cmdarray[*]} -eq 0 ]; then
     usage
 fi
 # loop over all lines stepping up. For stepping down (i=${#cmdarray[*]}; i>0; i--)
-for ((i=0; i<${#cmdarray[*]}; i++));do 
+for ((i=0; i<${#cmdarray[*]}; i++));do
     # concat def lines with ending \ to the next line, remove any \r from line
-    cmd=${cmdarray[i]//[$'\r']} 
+    cmd=${cmdarray[i]//[$'\r']}
 
-    while [ "${cmd:${#cmd}-1:1}" = '\' ];do 
+    while [ "${cmd:${#cmd}-1:1}" = '\' ];do
           ((i++))
           cmd=${cmd::-1}$'\n'${cmdarray[i]//[$'\r']}
     done
@@ -116,13 +116,5 @@ for ((i=0; i<${#cmdarray[*]}; i++));do
         [[ "$c" =~ [a-zA-Z0-9\.\~\_\-] ]] || printf -v c '%%%02X' "'$c"
         cmdu+="$c"
     done
-    cmd=$cmdu
-    # send command to FHEM ## and filter the output (tested with list...).
-    # ## the HTML Output is filtered (command sed -n) to the div container "content", all lines between <div ... </div> (included)
-    # ## first sed -e stripped the line with div itself, second " -e" stripped the lines with pre
-    # ## third " -e" removes all remaining html Tags - and we get plain formatted Text
-    # may be the argument -m 15 is usefull
-    # curl -s --data "fwcsrf=$token" "$hosturl/fhem?cmd=$cmd" | sed -n '/<div.*content/,/<\/div>/p' | sed -e '/div/d' -e '/\/pre>/d' -e 's/<[^>]*>//g'
-    # It's easier with wget and &XHR=1 
-    wget -q -O - "$hosturl/fhem?cmd=$cmd&fwcsrf=$token&XHR=1"
+    wget -q -O - "$hosturl/fhem?cmd=$cmdu&fwcsrf=$token&XHR=1"
 done
