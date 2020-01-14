@@ -74,16 +74,8 @@ for(my $i = 0; $i < @cmdarray; $i++) {
     };
     # url encode the cmd
     $fhemcmd = uri_escape($cmd);
-    print "proceeding line ".eval($i+1)." : $fhemcmd\n";
-    $url = "$hosturl/fhem?cmd=$fhemcmd&fwcsrf=$token";
+    # print "proceeding line ".eval($i+1)." : $fhemcmd\n";
+    $url = "$hosturl/fhem?cmd=$fhemcmd&fwcsrf=$token&XHR=1";
     $resp = $ua->get($url)->content;
-    # only between the lines <pre></pre> and remove any HTML Tag
-    #funktioniert noch nicht sauber bei massenimport
-    my @resparray = split("\n", $resp);
-    foreach my $zeile(@resparray){
-        if ($zeile !~ /<[^>]*>/ or $zeile =~ /pre>/ or $zeile =~ /NAME/) {
-           $zeile =~ s/<[^>]*>//g;
-           print "$zeile\n" ;
-        }
-    }
+    print $resp
 }
