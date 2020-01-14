@@ -18,6 +18,10 @@ Usage:
 For redirecting the stdout of another Program line per line for logging to FHEM
 
 Powershell: 
-* | % {"set Sicherung " + $_ }|fhemcl.ps1 [http://[user:password@]hostname:]portnumber
+```
+| % {"set Sicherung " + $_ }|fhemcl.ps1 [http://[user:password@]hostname:]portnumber
+```
 Bash:
-* | while IFS= read -r line; do echo "set Sicherung ${line}";done|bash fhemcl.sh [http://[user:password@]hostname:]portnumber
+```
+| while IFS= read -r line; do echo "set Sicherung ${line}";done|bash fhemcl.sh [http://[user:password@]hostname:]portnumber
+```
