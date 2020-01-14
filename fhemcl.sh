@@ -1,5 +1,6 @@
 #!/bin/bash
 # Heinz-Otto Klas 2019
+# simplified Version with wget instead of curl and with &XHR=1 for no HTML Response from Server 
 # send commands to FHEM over HTTP
 # if no Arguments use default http://localhost:8083
 port=8083
@@ -22,7 +23,8 @@ if [[ $1 == -h ]]
     usage
 fi
 # Test requirements
-prog="curl"
+#prog="curl"
+prog="wget"
 if ! which $prog > /dev/null
    then
       echo "$prog is missing, try <PaketMgr> install $prog"
@@ -58,10 +60,11 @@ hosturl=$(IFS=":";echo "${arr[*]}") # build the full url from the array together
 token=;status=
 while IFS=':' read key value; do
     case "$key" in
-        X-FHEM-csrfToken) token=${value//[[:blank:]]/} ;;
-        HTTP*) status="$key"                           ;;
+        *X-FHEM-csrfToken) token=${value//[$'\r']/} ;;
+        *HTTP*200*)        status="$key"            ;;
      esac
-done < <(curl -s -D - "$hosturl/fhem?XHR=1")
+#done < <(curl -s -D - "$hosturl/fhem?XHR=1")
+done < <(wget -qO - --server-response "$hosturl/fhem?XHR=1" 2>&1)
 # this should be extended
 # now only zero message detected
 if [ -z "${status}" ]; then 
@@ -114,10 +117,12 @@ for ((i=0; i<${#cmdarray[*]}; i++));do
         cmdu+="$c"
     done
     cmd=$cmdu
-    # send command to FHEM and filter the output (tested with list...).
-    # the HTML Output is filtered (command sed -n) to the div container "content", all lines between <div ... </div> (included)
-    # first sed -e stripped the line with div itself, second " -e" stripped the lines with pre
-    # third " -e" removes all remaining html Tags - and we get plain formatted Text
+    # send command to FHEM ## and filter the output (tested with list...).
+    # ## the HTML Output is filtered (command sed -n) to the div container "content", all lines between <div ... </div> (included)
+    # ## first sed -e stripped the line with div itself, second " -e" stripped the lines with pre
+    # ## third " -e" removes all remaining html Tags - and we get plain formatted Text
     # may be the argument -m 15 is usefull
-    curl -s --data "fwcsrf=$token" "$hosturl/fhem?cmd=$cmd" | sed -n '/<div.*content/,/<\/div>/p' | sed -e '/div/d' -e '/\/pre>/d' -e 's/<[^>]*>//g'
+    # curl -s --data "fwcsrf=$token" "$hosturl/fhem?cmd=$cmd" | sed -n '/<div.*content/,/<\/div>/p' | sed -e '/div/d' -e '/\/pre>/d' -e 's/<[^>]*>//g'
+    # It's easier with wget and &XHR=1 
+    wget -q -O - "$hosturl/fhem?cmd=$cmd&fwcsrf=$token&XHR=1"
 done
