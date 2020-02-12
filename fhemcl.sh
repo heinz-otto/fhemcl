@@ -116,5 +116,7 @@ for ((i=0; i<${#cmdarray[*]}; i++));do
         [[ "$c" =~ [a-zA-Z0-9\.\~\_\-] ]] || printf -v c '%%%02X' "'$c"
         cmdu+="$c"
     done
-    wget -q -O - "$hosturl/fhem?cmd=$cmdu&fwcsrf=$token&XHR=1"
+    # wget -q -O - "$hosturl/fhem?cmd=$cmdu&fwcsrf=$token&XHR=1"
+    # prevent an additional newline at the end "$()" the "" are important to save the newline inside the string
+    echo -n "$(wget -q -O - "$hosturl/fhem?cmd=$cmd&fwcsrf=$token&XHR=1")" 
 done
