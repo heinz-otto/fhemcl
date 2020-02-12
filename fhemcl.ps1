@@ -68,5 +68,6 @@ for ($i=0; $i -lt $cmdarray.Length; $i++) {
    $web = Invoke-WebRequest -Uri "$hosturl/fhem?cmd=$cmd&fwcsrf=$token&XHR=1" -Headers $headers
    write-verbose "--------------- Weboutput with Response - Content is shortened --"
    write-verbose $web
-   $web.content
+   # remove the last 0A from the response at the End of the string
+   if ($web.content.length -gt 0) {$web.content.Substring(0,$web.content.Length -1)} 
 }
