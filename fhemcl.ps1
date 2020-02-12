@@ -69,5 +69,6 @@ for ($i=0; $i -lt $cmdarray.Length; $i++) {
    write-verbose "--------------- Weboutput with Response - Content is shortened --"
    write-verbose $web
    # remove the last character (normally an additional 0A \r) from the response if there
+   # works eventually with $web.content.TrimEnd("`r")
    if ($web.content.length -gt 0) {$web.content.Substring(0,$web.content.Length -1)} 
 }
