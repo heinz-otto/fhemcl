@@ -77,5 +77,5 @@ for(my $i = 0; $i < @cmdarray; $i++) {
     # print "proceeding line ".eval($i+1)." : $fhemcmd\n";
     $url = "$hosturl/fhem?cmd=$fhemcmd&fwcsrf=$token&XHR=1";
     $resp = $ua->get($url)->content;
-    print $resp
+    print substr $resp,0,-1
 }
