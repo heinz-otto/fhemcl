@@ -28,7 +28,7 @@ For redirecting the stdout of another Program line per line for logging to FHEM
 ```
 ### get the Script inside your machine:
 ```
-| wget -OutFile fhemcl.ps1 https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.ps1
-| wget -O fhemcl.pl https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.pl
-| wget -O fhemcl.sh https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.sh
+wget -OutFile fhemcl.ps1 https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.ps1
+wget -O fhemcl.pl https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.pl
+wget -O fhemcl.sh https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.sh
 ```
