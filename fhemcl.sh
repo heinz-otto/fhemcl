@@ -73,9 +73,10 @@ if [ -z "${status}" ]; then
 fi
 
 # reading FHEM command, from Pipe, File or Arguments
-# Check to see if a pipe exists on stdin.
 cmdarray=()
-if [ -p /dev/stdin ]; then
+# Check to see if a pipe exists on stdin.
+#if [ -p /dev/stdin ]; then # ersetzt: es gibt Situationen wo das nicht funktioniert
+if read -t 0; then  
         # we read the input line by line
         while IFS= read -r line; do
               cmdarray+=("${line}")
