@@ -63,9 +63,8 @@ for ($i=0; $i -lt $cmdarray.Length; $i++) {
    write-verbose "proceeding line $($i+1) : $cmd"
    # url encode
    $cmd=[System.Uri]::EscapeDataString($cmd)
-   #$web = Invoke-WebRequest -Uri "$hosturl/fhem?cmd=$cmd&fwcsrf=$token" -Headers $headers
    #Without HTML
-   $web = Invoke-WebRequest -Uri "$hosturl/fhem?cmd=$cmd&fwcsrf=$token&XHR=1" -Headers $headers
+   $web = Invoke-WebRequest -Uri "$hosturl/fhem?cmd=$cmd&fwcsrf=$token&XHR=1" -Headers $headers -UseBasicParsing
    write-verbose "--------------- Weboutput with Response - Content is shortened --"
    write-verbose $web
    # remove the last character (normally an additional 0A \r) from the response if there
